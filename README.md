@@ -47,6 +47,19 @@ This chatbot was developed as part of a cybersecurity awareness campaign to help
    git clone https://github.com/FisokuhleSithole/CybersecurityChatBot.git
    cd CybersecurityChatBot
 
+  ## references
+
+   Pieterse, H. 2021. The Cyber Threat Landscape in South Africa: A 10-Year Review. The African Journal of Information and Communication, 28(28). doi: https://doi.org/10.23962/10539/32213
+
+   ##  Acknowledgement of AI Tool Use
+
+During the development of this project, I used **DeepSeek (an AI chatbot)** as a coding assistant and learning tool. My usage of this tool was as follows:
+
+- **Code Explanation:** I used DeepSeek to help explain complex C# concepts, such as `System.Media.SoundPlayer` and `System.Threading`.
+- **Debugging Assistance:** I used DeepSeek to help diagnose and resolve build errors, including the "MSB30" file copy error and GitHub Actions CI configuration.
+
+All code within this project was written, understood, and tested by me. The AI tool served as an educational guide and a more efficient alternative to traditional web searches and textbook consultation.
+
 <img width="1917" height="710" alt="image" src="https://github.com/user-attachments/assets/f9e49a46-415f-4f6f-8e8b-c5c7b9358454" />
 
    
