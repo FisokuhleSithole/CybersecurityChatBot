@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace CybersecurityChatBot
 {
@@ -10,7 +11,6 @@ namespace CybersecurityChatBot
             Console.WindowWidth = 100;
             Console.WindowHeight = 40;
 
-            // Display a simple welcome message
             Console.WriteLine("========================================");
             Console.WriteLine("   CYBERSECURITY AWARENESS CHATBOT");
             Console.WriteLine("========================================");
@@ -18,15 +18,14 @@ namespace CybersecurityChatBot
             Console.WriteLine("Initializing system...");
             Console.WriteLine();
 
-            // Play voice greeting (stub version - will work when AudioPlayer is ready)
-            AudioPlayer.PlayGreeting("greeting.wav");
+            // Show where the program is running from
+            Console.WriteLine($"[DEBUG] Running from: {Environment.CurrentDirectory}");
 
-            // Display logo (stub version - will work when UiHelper is ready)
-           // UiHelper.DisplayAsciiLogo();
+            // Try to play the greeting
+            AudioPlayer.PlayGreeting("greeting");
 
-            // Start chatbot (stub version - will work when Chatbot is ready)
-           // Chatbot bot = new Chatbot();
-           // bot.Start();
+            // Show ASCII logo (from your UiHelper)
+            UiHelper.DisplayAsciiLogo();
 
             Console.WriteLine();
             Console.WriteLine("Press any key to exit...");
