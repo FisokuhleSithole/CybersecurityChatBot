@@ -1,5 +1,3 @@
-<img width="1917" height="710" alt="image" src="https://github.com/user-attachments/assets/e0b8b263-2f92-495c-8e70-5b7ad25c6e63" />
-
 #  Cybersecurity Awareness Chatbot
 
 A console-based chatbot for educating South African citizens about cybersecurity threats, including phishing, password safety, and safe browsing habits.
