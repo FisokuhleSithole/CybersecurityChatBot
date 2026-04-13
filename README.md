@@ -44,7 +44,7 @@ This chatbot was developed as part of a cybersecurity awareness campaign to help
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/CybersecurityChatBot.git
+   git clone https://github.com/FisokuhleSithole/CybersecurityChatBot.git
    cd CybersecurityChatBot
 
 <img width="1917" height="710" alt="image" src="https://github.com/user-attachments/assets/f9e49a46-415f-4f6f-8e8b-c5c7b9358454" />
