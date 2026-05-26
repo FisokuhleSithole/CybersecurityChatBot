@@ -1,34 +1,16 @@
 ﻿using System;
-using System.Threading;
+using System.Windows.Forms;
 
 namespace CybersecurityChatBot
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
-            Console.Title = "Cybersecurity Awareness Bot";
-            Console.WindowWidth = 120;
-            Console.WindowHeight = 50;
-
-            // Show loading animation
-            UiHelper.ShowLoadingAnimation("Initializing Cybersecurity Bot", 1500);
-
-            // Play voice greeting
-            AudioPlayer.PlayGreeting("greeting.wav");
-
-            // Clear and show logo
-            UiHelper.ClearWithDelay(500);
-            UiHelper.DisplayAsciiLogo();
-
-            // Create and start the chatbot (this handles everything)
-            Chatbot bot = new Chatbot();
-            bot.Start();
-
-            // After chatbot exits, show exit message
-            Console.WriteLine();
-            UiHelper.TypeWriterEffect("Press any key to exit...", 30, "gray");
-            Console.ReadKey();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());  // ← Note: Form1, not ChatbotForm
         }
     }
 }
