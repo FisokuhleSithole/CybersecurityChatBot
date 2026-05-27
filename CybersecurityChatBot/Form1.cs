@@ -37,28 +37,28 @@ namespace CybersecurityChatBot
             // Password responses
             responses.Add("password", new List<string>
             {
-                "🔐 Use strong passwords with at least 12 characters, including uppercase, lowercase, numbers, and symbols!",
-                "🔐 Never reuse passwords across different accounts. Each account needs its own unique password!",
-                "🔐 Consider using a password manager like Bitwarden or LastPass to generate and store strong passwords!",
-                "🔐 Avoid using personal information like birthdays or pet names in your passwords!"
+                "Use strong passwords with at least 12 characters, including uppercase, lowercase, numbers, and symbols!",
+                "Never reuse passwords across different accounts. Each account needs its own unique password!",
+                "Consider using a password manager like Bitwarden or LastPass to generate and store strong passwords!",
+                "Avoid using personal information like birthdays or pet names in your passwords!"
             });
 
             // Phishing responses
             responses.Add("phishing", new List<string>
             {
-                "🎣 Phishing emails often create urgency. Always verify the sender's email address before clicking any links!",
-                "🎣 Never download attachments from unknown senders. They may contain malware that steals your information!",
-                "🎣 Look for spelling and grammar mistakes – these are common signs of phishing attempts!",
-                "🎣 Hover over links to see the real URL before clicking. Scammers use fake domains like 'paypa1.com'!"
+                "Phishing emails often create urgency. Always verify the sender's email address before clicking any links!",
+                "Never download attachments from unknown senders. They may contain malware that steals your information!",
+                "Look for spelling and grammar mistakes – these are common signs of phishing attempts!",
+                "Hover over links to see the real URL before clicking. Scammers use fake domains like 'khokha.com'!"
             });
 
             // Privacy responses
             responses.Add("privacy", new List<string>
             {
-                "🔒 Review your privacy settings on social media regularly. Limit what the public can see!",
-                "🔒 Be careful what personal information you share online – once it's out there, it's hard to remove!",
-                "🔒 Use two-factor authentication (2FA) on all accounts that offer it for extra security!",
-                "🔒 Regularly check which apps have access to your data and remove ones you don't use!"
+                "Review your privacy settings on social media regularly. Limit what the public can see!",
+                "Be careful what personal information you share online – once it's out there, it's hard to remove!",
+                "Use two-factor authentication (2FA) on all accounts that offer it for extra security!",
+                "Regularly check which apps have access to your data and remove ones you don't use!"
             });
         }
 
