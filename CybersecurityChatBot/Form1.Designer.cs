@@ -3,7 +3,7 @@
     partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.RichTextBox txtChat;  // Changed from ListBox to RichTextBox
+        private System.Windows.Forms.RichTextBox txtChat;  
         private System.Windows.Forms.TextBox txtUserInput;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnClear;
@@ -34,7 +34,7 @@
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Size = new System.Drawing.Size(800, 60);
-            this.lblTitle.Text = "  🔐 Cybersecurity Awareness Chatbot";
+            this.lblTitle.Text = " Cybersecurity Awareness Chatbot";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             // txtChat - Chat Display Area (RichTextBox with word wrap)
@@ -45,7 +45,7 @@
             this.txtChat.Size = new System.Drawing.Size(770, 450);
             this.txtChat.TabIndex = 0;
             this.txtChat.ReadOnly = true;
-            this.txtChat.WordWrap = true;  // This enables text wrapping!
+            this.txtChat.WordWrap = true;  // This enables text wrappin
             this.txtChat.BorderStyle = System.Windows.Forms.BorderStyle.None;
 
             // txtUserInput - Input Box
