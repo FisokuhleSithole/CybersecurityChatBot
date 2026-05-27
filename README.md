@@ -64,8 +64,8 @@ All code within this project was written, understood, and tested by me. The AI t
 
 ## Releases
 
-| Version | Description | Link |
-|---------|-------------|------|
+| Version | Description |
+|---------|-------------|
 | **v2.0** | Part 2: GUI Chatbot with Sentiment Detection, Random Responses, and Memory |
 | **v1.0** | Part 1: Console-based Chatbot with Voice Greeting and Typewriter Effect | 
 
