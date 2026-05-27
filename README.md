@@ -62,4 +62,20 @@ All code within this project was written, understood, and tested by me. The AI t
 
 <img width="1917" height="710" alt="image" src="https://github.com/user-attachments/assets/f9e49a46-415f-4f6f-8e8b-c5c7b9358454" />
 
+## Releases
+
+| Version | Description | Link |
+|---------|-------------|------|
+| **v2.0** | Part 2: GUI Chatbot with Sentiment Detection, Random Responses, and Memory | [Download]
+| **v1.0** | Part 1: Console-based Chatbot with Voice Greeting and Typewriter Effect | 
+
+##  Part 2 Features
+
+**GUI Interface**: Windows Forms with dark theme, full screen support
+**Sentiment Detection**: Detects worried, curious, frustrated moods
+**Random Responses**: Multiple answers for each topic
+**Memory & Recall**: Remembers user name and interests
+**Conversation Flow**: "Tell me more" continues current topic
+**Keyword Recognition**: Recognizes password, phishing, privacy keywords
+
    
