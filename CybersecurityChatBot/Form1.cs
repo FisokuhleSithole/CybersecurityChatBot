@@ -52,6 +52,15 @@ namespace CybersecurityChatBot
                 "Hover over links to see the real URL before clicking. Scammers use fake domains like 'khokha.com'!"
             });
 
+            // Malware responses
+            responses.Add("malware", new List<string>
+            {
+               "Malware is malicious software designed to harm your computer. Always download from official sources!",
+               " Keep your antivirus software updated and run regular scans!",
+               "Never click on pop-up ads claiming your computer is infected - they're often scams!",
+               "Don't insert unknown USB drives into your computer - they can contain automatic malware!"
+            });    
+
             // Privacy responses
             responses.Add("privacy", new List<string>
             {
@@ -84,6 +93,7 @@ namespace CybersecurityChatBot
             AddBotMessage("  • password - Password safety tips");
             AddBotMessage("  • phishing - How to spot scams");
             AddBotMessage("  • privacy - Protecting your personal information");
+            AddBotMessage("  • malware - How to avoid malicious software");
             AddBotMessage("");
             AddBotMessage("What's your name?");
             AddBotMessage("═══════════════════════════════════════════════════════════════════");
@@ -97,7 +107,7 @@ namespace CybersecurityChatBot
                 int index = random.Next(responses[keyword].Count);
                 return responses[keyword][index];
             }
-            return "I have information on that topic. Please ask me about: password, phishing, or privacy.";
+            return "I have information on that topic. Please ask me about: password, phishing, privacy, or malware.";
         }
 
         private string DetectSentiment(string input)
@@ -134,14 +144,14 @@ namespace CybersecurityChatBot
                         currentTopic = detectedTopic;
                         return $"It's completely understandable to feel worried about {detectedTopic}. Let me share some tips to help you stay safe:\n\n{GetRandomResponse(detectedTopic)}";
                     }
-                    return "It's normal to feel worried about online threats. Would you like me to share some general safety tips about password, phishing, or privacy?";
+                    return "It's normal to feel worried about online threats. Would you like me to share some general safety tips about password, phishing, malware, or privacy?";
 
                 case "curious":
                     if (!string.IsNullOrEmpty(detectedTopic))
                     {
                         return $"That's great that you're curious about {detectedTopic}! Here's what you should know:\n\n{GetRandomResponse(detectedTopic)}";
                     }
-                    return "That's great! Curiosity helps you learn and stay safe. What specific topic would you like to explore? (password, phishing, or privacy)";
+                    return "That's great! Curiosity helps you learn and stay safe. What specific topic would you like to explore? (password, phishing, malware, or privacy)";
 
                 case "frustrated":
                     return "I understand cybersecurity can be frustrating. Let's take it step by step. What specific issue are you dealing with?";
@@ -158,12 +168,29 @@ namespace CybersecurityChatBot
         {
             string lowerInput = input.ToLower();
 
+            // STEP 0: Check for quit command
+            if (lowerInput == "quit" || lowerInput == "exit" || lowerInput == "goodbye")
+            {
+                // Ask for confirmation
+                DialogResult result = MessageBox.Show(
+                    "Are you sure you want to exit the Cybersecurity Chatbot?",
+                    "Confirm Exit",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+                return "";  // Return empty string, don't show anything
+            }
+
             // STEP 1: Check for name input first
             if (string.IsNullOrEmpty(userName))
             {
                 userName = input;
                 userMemory["name"] = userName;
-                return $"Nice to meet you, {userName}! What cybersecurity topic would you like to learn about? (Try: password, phishing, or privacy)";
+                return $"Nice to meet you, {userName}! What cybersecurity topic would you like to learn about? (Try: password, phishing, malware, or privacy)";
             }
 
             // STEP 2: Check for sentiment BEFORE keyword recognition
@@ -184,7 +211,7 @@ namespace CybersecurityChatBot
                 {
                     return $"Here's another tip about {currentTopic}:\n\n{GetRandomResponse(currentTopic)}";
                 }
-                return "Sure! What topic would you like to learn more about? (password, phishing, or privacy)";
+                return "Sure! What topic would you like to learn more about? (password, phishing, malware, or privacy)";
             }
 
             // STEP 4: Check for thank you
@@ -204,6 +231,7 @@ namespace CybersecurityChatBot
             {
                 if (lowerInput.Contains("password")) userInterest = "password";
                 else if (lowerInput.Contains("phishing")) userInterest = "phishing";
+                else if (lowerInput.Contains("malware")) userInterest = "malware";
                 else if (lowerInput.Contains("privacy")) userInterest = "privacy";
 
                 userMemory["interest"] = userInterest;
@@ -224,7 +252,7 @@ namespace CybersecurityChatBot
             }
 
             // STEP 8: Default response
-            return "I'm not sure I understand. You can ask me about:\n• password - Password safety tips\n• phishing - How to spot scams\n• privacy - Protecting your personal information\n\nOr tell me if you're worried or curious about something!";
+            return "I'm not sure I understand. You can ask me about:\n• password - Password safety tips\n• phishing - How to spot scams\n• malware - How to avoid malicious software\n• privacy - Protecting your personal information\n\nOr tell me if you're worried or curious about something!";
         }
 
         private void AddUserMessage(string message)
