@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CybersecurityChatbot;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -19,15 +20,25 @@ namespace CybersecurityChatBot
         // Conversation history
         private List<string> conversationHistory = new List<string>();
 
+        // part 3 
+        private DatabaseHelper dbHelper;
+
         public Form1()
         {
             InitializeComponent();
             InitializeResponses();
+            InitializePart3();
             PlayVoiceGreeting();
             DisplayWelcomeMessage();
+            TestDatabaseConnection();
 
             // Enable full screen mode
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        private void InitializePart3()
+        {
+            dbHelper = new DatabaseHelper(); 
         }
 
         private void InitializeResponses()
@@ -295,6 +306,18 @@ namespace CybersecurityChatBot
         {
             txtChat.Clear();
             AddBotMessage("Conversation cleared. How can I help you today?");
+        }
+
+        private void TestDatabaseConnection()
+        {
+            if (dbHelper.TestConnection())
+            {
+                AddBotMessage(" Database connection successful!");
+            }
+            else
+            {
+                AddBotMessage(" Database connection failed. Check your connection string.");
+            }
         }
 
         private void txtUserInput_KeyPress(object sender, KeyPressEventArgs e)
