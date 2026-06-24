@@ -1,11 +1,11 @@
-﻿using CybersecurityChatbot;
+﻿using CybersecurityChatBot;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace CybersecurityChatBot
+namespace CybersecurityChatbot
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form  // ← MUST have : Form
     {
         // Memory variables
         private string userName = "";
@@ -20,65 +20,89 @@ namespace CybersecurityChatBot
         // Conversation history
         private List<string> conversationHistory = new List<string>();
 
-        // part 3 
+        // Part 3: Database, Quiz, Activity Log
         private DatabaseHelper dbHelper;
+        private QuizGame quizGame;
+        private List<ActivityLogEntry> activityLog;
 
+        // Constructor - THIS IS CRITICAL!
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();  // ← MUST call this!
             InitializeResponses();
             InitializePart3();
             PlayVoiceGreeting();
             DisplayWelcomeMessage();
-            TestDatabaseConnection();
 
-            // Enable full screen mode
             this.WindowState = FormWindowState.Maximized;
         }
 
         private void InitializePart3()
         {
-            dbHelper = new DatabaseHelper(); 
+            dbHelper = new DatabaseHelper();
+            quizGame = new QuizGame();
+            activityLog = new List<ActivityLogEntry>();
+
+            // Test database connection
+            if (dbHelper.TestConnection())
+            {
+                AddBotMessage(" Database connection successful!");
+            }
+            else
+            {
+                AddBotMessage(" Database connection failed. Check your connection string.");
+            }
+
+            LogActivity("Application Started", "Cybersecurity Chatbot launched.");
+        }
+
+        private void LogActivity(string actionType, string description)
+        {
+            var entry = new ActivityLogEntry
+            {
+                ActionType = actionType,
+                Description = description,
+                Timestamp = DateTime.Now
+            };
+            activityLog.Add(entry);
+            if (activityLog.Count > 50) activityLog.RemoveAt(0);
+            dbHelper?.AddActivityLog(actionType, description);
         }
 
         private void InitializeResponses()
         {
             responses = new Dictionary<string, List<string>>();
 
-            // Password responses
             responses.Add("password", new List<string>
             {
-                "Use strong passwords with at least 12 characters, including uppercase, lowercase, numbers, and symbols!",
-                "Never reuse passwords across different accounts. Each account needs its own unique password!",
-                "Consider using a password manager like Bitwarden or LastPass to generate and store strong passwords!",
-                "Avoid using personal information like birthdays or pet names in your passwords!"
+                " Use strong passwords with at least 12 characters, including uppercase, lowercase, numbers, and symbols!",
+                " Never reuse passwords across different accounts. Each account needs its own unique password!",
+                " Consider using a password manager like Bitwarden or LastPass!",
+                " Avoid using personal information like birthdays or pet names in your passwords!"
             });
 
-            // Phishing responses
             responses.Add("phishing", new List<string>
             {
-                "Phishing emails often create urgency. Always verify the sender's email address before clicking any links!",
-                "Never download attachments from unknown senders. They may contain malware that steals your information!",
-                "Look for spelling and grammar mistakes – these are common signs of phishing attempts!",
-                "Hover over links to see the real URL before clicking. Scammers use fake domains like 'khokha.com'!"
+                " Phishing emails often create urgency. Always verify the sender's email address before clicking links!",
+                " Never download attachments from unknown senders. They may contain malware!",
+                " Look for spelling and grammar mistakes – common signs of phishing!",
+                " Hover over links to see the real URL before clicking!"
             });
 
-            // Malware responses
-            responses.Add("malware", new List<string>
-            {
-               "Malware is malicious software designed to harm your computer. Always download from official sources!",
-               " Keep your antivirus software updated and run regular scans!",
-               "Never click on pop-up ads claiming your computer is infected - they're often scams!",
-               "Don't insert unknown USB drives into your computer - they can contain automatic malware!"
-            });    
-
-            // Privacy responses
             responses.Add("privacy", new List<string>
             {
-                "Review your privacy settings on social media regularly. Limit what the public can see!",
-                "Be careful what personal information you share online – once it's out there, it's hard to remove!",
-                "Use two-factor authentication (2FA) on all accounts that offer it for extra security!",
-                "Regularly check which apps have access to your data and remove ones you don't use!"
+                " Review your privacy settings on social media regularly. Limit what the public can see!",
+                " Be careful what personal information you share online – once it's out, it's hard to remove!",
+                " Use two-factor authentication (2FA) on all accounts that offer it!",
+                " Regularly check which apps have access to your data and remove ones you don't use!"
+            });
+
+            responses.Add("malware", new List<string>
+            {
+                " Malware is malicious software designed to harm your computer. Always download from official sources!",
+                " Keep your antivirus software updated and run regular scans!",
+                " Never click on pop-up ads claiming your computer is infected – they're often scams!",
+                " Don't insert unknown USB drives into your computer – they can contain automatic malware!"
             });
         }
 
@@ -88,9 +112,9 @@ namespace CybersecurityChatBot
             {
                 AudioPlayer.PlayGreeting("greeting.wav");
             }
-            catch (Exception ex)
+            catch
             {
-                AddBotMessage("(Voice greeting could not be played: " + ex.Message + ")");
+                AddBotMessage("(Voice greeting could not be played)");
             }
         }
 
@@ -105,6 +129,12 @@ namespace CybersecurityChatBot
             AddBotMessage("  • phishing - How to spot scams");
             AddBotMessage("  • privacy - Protecting your personal information");
             AddBotMessage("  • malware - How to avoid malicious software");
+            AddBotMessage("");
+            AddBotMessage(" NEW FEATURES:");
+            AddBotMessage("  • 'add task' - Manage cybersecurity tasks");
+            AddBotMessage("  • 'show tasks' - View your tasks");
+            AddBotMessage("  • 'start quiz' - Test your cybersecurity knowledge");
+            AddBotMessage("  • 'show log' - View recent activity");
             AddBotMessage("");
             AddBotMessage("What's your name?");
             AddBotMessage("═══════════════════════════════════════════════════════════════════");
@@ -123,7 +153,8 @@ namespace CybersecurityChatBot
 
         private string DetectSentiment(string input)
         {
-            if (input.Contains("worried") || input.Contains("scared") || input.Contains("anxious") || input.Contains("nervous") || input.Contains("concerned"))
+            if (input.Contains("worried") || input.Contains("scared") || input.Contains("anxious") ||
+                input.Contains("nervous") || input.Contains("concerned"))
                 return "worried";
             if (input.Contains("curious") || input.Contains("interested") || input.Contains("want to learn"))
                 return "curious";
@@ -136,7 +167,6 @@ namespace CybersecurityChatBot
 
         private string HandleSentiment(string sentiment, string input)
         {
-            // First, check if there's a topic in the input
             string detectedTopic = "";
             foreach (var keyword in responses.Keys)
             {
@@ -153,23 +183,19 @@ namespace CybersecurityChatBot
                     if (!string.IsNullOrEmpty(detectedTopic))
                     {
                         currentTopic = detectedTopic;
-                        return $"It's completely understandable to feel worried about {detectedTopic}. Let me share some tips to help you stay safe:\n\n{GetRandomResponse(detectedTopic)}";
+                        return $"It's completely understandable to feel worried about {detectedTopic}. Let me share some tips:\n\n{GetRandomResponse(detectedTopic)}";
                     }
-                    return "It's normal to feel worried about online threats. Would you like me to share some general safety tips about password, phishing, malware, or privacy?";
-
+                    return "It's normal to feel worried about online threats. Would you like me to share some general safety tips?";
                 case "curious":
                     if (!string.IsNullOrEmpty(detectedTopic))
                     {
                         return $"That's great that you're curious about {detectedTopic}! Here's what you should know:\n\n{GetRandomResponse(detectedTopic)}";
                     }
-                    return "That's great! Curiosity helps you learn and stay safe. What specific topic would you like to explore? (password, phishing, malware, or privacy)";
-
+                    return "That's great! Curiosity helps you learn. What topic would you like to explore?";
                 case "frustrated":
                     return "I understand cybersecurity can be frustrating. Let's take it step by step. What specific issue are you dealing with?";
-
                 case "confused":
                     return "I apologize if I wasn't clear. Let me try again. What would you like to know about cybersecurity?";
-
                 default:
                     return "";
             }
@@ -177,94 +203,290 @@ namespace CybersecurityChatBot
 
         private string ProcessInput(string input)
         {
-            string lowerInput = input.ToLower();
+            string lowerInput = input.ToLower().Trim();
 
-            // STEP 0: Check for quit command
+            // Check for quit
             if (lowerInput == "quit" || lowerInput == "exit" || lowerInput == "goodbye")
             {
-                // Ask for confirmation
-                DialogResult result = MessageBox.Show(
-                    "Are you sure you want to exit the Cybersecurity Chatbot?",
-                    "Confirm Exit",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    Application.Exit();
-                }
-                return "";  // Return empty string, don't show anything
+                Application.Exit();
+                return "";
             }
 
-            // STEP 1: Check for name input first
+            // PART 3: Activity Log
+            if (lowerInput.Contains("show log") || lowerInput.Contains("what have you done") ||
+                lowerInput.Contains("activity log") || lowerInput.Contains("recent actions"))
+            {
+                LogActivity("Activity Log Viewed", "User requested to view activity log.");
+                return GetActivityLogDisplay();
+            }
+
+            // PART 3: Quiz
+            if (lowerInput.Contains("start quiz") || lowerInput.Contains("play quiz") ||
+                lowerInput.Contains("start game") || lowerInput.Contains("quiz"))
+            {
+                if (!quizGame.IsActive)
+                {
+                    LogActivity("Quiz Started", "User started the cybersecurity quiz.");
+                    return quizGame.StartQuiz();
+                }
+                else
+                {
+                    return "You're already playing the quiz! Submit your answer.";
+                }
+            }
+
+            // PART 3: Handle quiz answer
+            if (quizGame.IsActive)
+            {
+                string result = quizGame.SubmitAnswer(input);
+                LogActivity("Quiz Attempt", $"User answered a quiz question.");
+                return result;
+            }
+
+            // PART 3: Add Task
+            if (lowerInput.Contains("add task") || lowerInput.Contains("new task") ||
+                lowerInput.Contains("create task") || lowerInput.Contains("add reminder"))
+            {
+                return HandleAddTask(input);
+            }
+
+            // PART 3: Show tasks
+            if (lowerInput.Contains("show tasks") || lowerInput.Contains("view tasks") ||
+                lowerInput.Contains("list tasks") || lowerInput.Contains("my tasks"))
+            {
+                return GetTasksDisplay();
+            }
+
+            // PART 3: Complete task
+            if (lowerInput.Contains("complete task") || lowerInput.Contains("task done") ||
+                lowerInput.Contains("finish task"))
+            {
+                return HandleCompleteTask(input);
+            }
+
+            // PART 3: Delete task
+            if (lowerInput.Contains("delete task") || lowerInput.Contains("remove task"))
+            {
+                return HandleDeleteTask(input);
+            }
+
+            // PART 3: NLP - Reminder
+            if (lowerInput.Contains("remind me") || lowerInput.Contains("remind to") ||
+                lowerInput.Contains("set reminder") || lowerInput.Contains("remember to"))
+            {
+                return HandleAddTask(input);
+            }
+
+            // Check for name
             if (string.IsNullOrEmpty(userName))
             {
                 userName = input;
                 userMemory["name"] = userName;
-                return $"Nice to meet you, {userName}! What cybersecurity topic would you like to learn about? (Try: password, phishing, malware, or privacy)";
+                LogActivity("User Named", $"User set name to {userName}");
+                return $"Nice to meet you, {userName}! What cybersecurity topic would you like to learn about?\n\nOr try the new features: add task, start quiz, or show tasks!";
             }
 
-            // STEP 2: Check for sentiment BEFORE keyword recognition
+            // Sentiment detection
             string sentiment = DetectSentiment(lowerInput);
             if (sentiment != "neutral")
             {
                 string sentimentResponse = HandleSentiment(sentiment, lowerInput);
                 if (!string.IsNullOrEmpty(sentimentResponse))
                 {
+                    LogActivity("Sentiment Detected", $"User expressed {sentiment} sentiment.");
                     return sentimentResponse;
                 }
             }
 
-            // STEP 3: Check for conversation flow - "tell me more"
-            if (lowerInput.Contains("tell me more") || lowerInput.Contains("another tip") || lowerInput.Contains("more info"))
+            // Conversation flow
+            if (lowerInput.Contains("tell me more") || lowerInput.Contains("another tip") ||
+                lowerInput.Contains("more info") || lowerInput.Contains("explain more"))
             {
                 if (!string.IsNullOrEmpty(currentTopic) && responses.ContainsKey(currentTopic))
                 {
+                    LogActivity("More Info", $"User requested more info on {currentTopic}");
                     return $"Here's another tip about {currentTopic}:\n\n{GetRandomResponse(currentTopic)}";
                 }
-                return "Sure! What topic would you like to learn more about? (password, phishing, malware, or privacy)";
+                return "Sure! What topic would you like to learn more about? (password, phishing, privacy, or malware)";
             }
 
-            // STEP 4: Check for thank you
+            // Thank you
             if (lowerInput.Contains("thank"))
             {
                 return $"You're welcome, {userName}! I'm glad I could help. Is there anything else you'd like to learn about?";
             }
 
-            // STEP 5: Check for greeting (but only if not already handled)
+            // Greeting
             if (lowerInput == "hello" || lowerInput == "hi" || lowerInput == "hey")
             {
                 return $"Hello again, {userName}! How can I help you today?";
             }
 
-            // STEP 6: Check for interest memory
-            if (lowerInput.Contains("interested in"))
-            {
-                if (lowerInput.Contains("password")) userInterest = "password";
-                else if (lowerInput.Contains("phishing")) userInterest = "phishing";
-                else if (lowerInput.Contains("malware")) userInterest = "malware";
-                else if (lowerInput.Contains("privacy")) userInterest = "privacy";
-
-                userMemory["interest"] = userInterest;
-                if (!string.IsNullOrEmpty(userInterest) && responses.ContainsKey(userInterest))
-                {
-                    return $"Great! I'll remember that you're interested in {userInterest}. Here's a tip:\n\n{GetRandomResponse(userInterest)}";
-                }
-            }
-
-            // STEP 7: Check for keyword recognition
+            // Keyword recognition
             foreach (var keyword in responses.Keys)
             {
                 if (lowerInput.Contains(keyword))
                 {
                     currentTopic = keyword;
+                    LogActivity("Topic Discussed", $"User asked about {keyword}");
                     return GetRandomResponse(keyword);
                 }
             }
 
-            // STEP 8: Default response
-            return "I'm not sure I understand. You can ask me about:\n• password - Password safety tips\n• phishing - How to spot scams\n• malware - How to avoid malicious software\n• privacy - Protecting your personal information\n\nOr tell me if you're worried or curious about something!";
+            // Default response
+            return "I'm not sure I understand. You can ask me about:\n• password - Password safety tips\n• phishing - How to spot scams\n• privacy - Protecting your personal information\n• malware - How to avoid malicious software\n\nOr try new features:\n• add task - Manage cybersecurity tasks\n• start quiz - Test your knowledge\n• show log - View recent activity";
         }
+
+        // PART 3: Handle Add Task
+        private string HandleAddTask(string input)
+        {
+            string taskContent = input;
+            foreach (var prefix in new[] { "add task", "new task", "create task", "add reminder", "remind me to" })
+            {
+                if (input.ToLower().Contains(prefix))
+                {
+                    int index = input.ToLower().IndexOf(prefix) + prefix.Length;
+                    taskContent = input.Substring(Math.Min(index, input.Length)).Trim();
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(taskContent) || taskContent.Length < 3)
+            {
+                return "What task would you like to add? Please describe it, e.g., 'Enable two-factor authentication'";
+            }
+
+            string title = taskContent.Length > 50 ? taskContent.Substring(0, 47) + "..." : taskContent;
+            string description = taskContent;
+
+            DateTime? reminderDate = null;
+            if (input.ToLower().Contains("remind") || input.ToLower().Contains("tomorrow") ||
+                input.ToLower().Contains("days") || input.ToLower().Contains("weeks"))
+            {
+                var words = input.Split(' ');
+                for (int i = 0; i < words.Length; i++)
+                {
+                    if (words[i].ToLower() == "in" && i + 2 < words.Length && words[i + 2].ToLower() == "days")
+                    {
+                        if (int.TryParse(words[i + 1], out int days))
+                        {
+                            reminderDate = DateTime.Now.AddDays(days);
+                        }
+                    }
+                    else if (words[i].ToLower() == "tomorrow")
+                    {
+                        reminderDate = DateTime.Now.AddDays(1);
+                    }
+                }
+            }
+
+            bool success = dbHelper.AddTask(title, description, reminderDate);
+            if (success)
+            {
+                LogActivity("Task Added", $"Task: {title}");
+                string reminderMsg = reminderDate.HasValue ? $" I'll remind you on {reminderDate.Value:yyyy-MM-dd}." : "";
+                return $" Task added: '{title}'{reminderMsg}\n\nType 'show tasks' to view your tasks.";
+            }
+            return " I couldn't add that task. Please try again or check if the database is connected.";
+        }
+
+        private string GetTasksDisplay()
+        {
+            var tasks = dbHelper.GetTasks(false);
+            if (tasks.Count == 0)
+                return " You have no pending tasks. Add one with 'add task'!";
+
+            string result = " YOUR TASKS:\n\n";
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                result += $"{i + 1}. {tasks[i].Title}";
+                if (!string.IsNullOrEmpty(tasks[i].Description))
+                    result += $"\n   Description: {tasks[i].Description}";
+                if (tasks[i].ReminderDate.HasValue)
+                    result += $"\n   Reminder: {tasks[i].ReminderDate.Value:yyyy-MM-dd}";
+                result += "\n\n";
+            }
+            result += "Type 'complete task 1' to mark as done, or 'delete task 1' to remove.";
+            return result;
+        }
+
+        private string HandleCompleteTask(string input)
+        {
+            var tasks = dbHelper.GetTasks(false);
+            if (tasks.Count == 0)
+                return "You have no pending tasks to complete.";
+
+            int taskId = ExtractTaskId(input);
+            if (taskId < 1 || taskId > tasks.Count)
+                return $"Please specify a valid task number (1-{tasks.Count}). Type 'show tasks' to see them.";
+
+            var task = tasks[taskId - 1];
+            bool success = dbHelper.CompleteTask(task.Id);
+            if (success)
+            {
+                LogActivity("Task Completed", $"Task: {task.Title}");
+                return $" Task '{task.Title}' marked as completed!";
+            }
+            return " Could not complete the task. Please try again.";
+        }
+
+        private string HandleDeleteTask(string input)
+        {
+            var tasks = dbHelper.GetTasks(true);
+            if (tasks.Count == 0)
+                return "You have no tasks to delete.";
+
+            int taskId = ExtractTaskId(input);
+            if (taskId < 1 || taskId > tasks.Count)
+                return $"Please specify a valid task number (1-{tasks.Count}). Type 'show tasks' to see them.";
+
+            var task = tasks[taskId - 1];
+            bool success = dbHelper.DeleteTask(task.Id);
+            if (success)
+            {
+                LogActivity("Task Deleted", $"Task: {task.Title}");
+                return $" Task '{task.Title}' deleted!";
+            }
+            return " Could not delete the task. Please try again.";
+        }
+
+        private int ExtractTaskId(string input)
+        {
+            var words = input.Split(' ');
+            foreach (var word in words)
+            {
+                if (int.TryParse(word, out int num))
+                    return num;
+            }
+            return -1;
+        }
+
+        private string GetActivityLogDisplay()
+        {
+            var entries = activityLog.Count > 0 ? activityLog : dbHelper.GetActivityLog(10);
+
+            if (entries.Count == 0)
+                return " No activity logged yet.";
+
+            string result = " RECENT ACTIVITY LOG:\n\n";
+            int count = 0;
+            for (int i = Math.Min(entries.Count - 1, 9); i >= 0 && count < 10; i--)
+            {
+                var entry = entries[i];
+                result += $"{count + 1}. [{entry.Timestamp:HH:mm}] {entry.ActionType}: {entry.Description}\n";
+                count++;
+            }
+
+            if (entries.Count > 10)
+                result += $"\n(Showing last 10 of {entries.Count} entries)";
+
+            LogActivity("Log Viewed", "User reviewed activity log.");
+            return result;
+        }
+
+        // ======================================================
+        // CHAT DISPLAY METHODS (These match the Designer controls)
+        // ======================================================
 
         private void AddUserMessage(string message)
         {
@@ -281,6 +503,10 @@ namespace CybersecurityChatBot
             }
         }
 
+        // ======================================================
+        // EVENT HANDLERS (These match the Designer events)
+        // ======================================================
+
         private void btnSend_Click(object sender, EventArgs e)
         {
             string userInput = txtUserInput.Text.Trim();
@@ -292,12 +518,11 @@ namespace CybersecurityChatBot
 
             AddUserMessage(userInput);
             string response = ProcessInput(userInput);
-            AddBotMessage(response);
+            if (!string.IsNullOrEmpty(response))
+                AddBotMessage(response);
 
             txtUserInput.Clear();
             txtUserInput.Focus();
-
-            // Auto-scroll to bottom
             txtChat.SelectionStart = txtChat.Text.Length;
             txtChat.ScrollToCaret();
         }
@@ -305,19 +530,8 @@ namespace CybersecurityChatBot
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtChat.Clear();
+            LogActivity("Chat Cleared", "User cleared the chat.");
             AddBotMessage("Conversation cleared. How can I help you today?");
-        }
-
-        private void TestDatabaseConnection()
-        {
-            if (dbHelper.TestConnection())
-            {
-                AddBotMessage(" Database connection successful!");
-            }
-            else
-            {
-                AddBotMessage(" Database connection failed. Check your connection string.");
-            }
         }
 
         private void txtUserInput_KeyPress(object sender, KeyPressEventArgs e)

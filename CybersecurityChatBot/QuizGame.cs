@@ -130,7 +130,7 @@ namespace CybersecurityChatbot
             isActive = true;
             currentQuestionIndex = 0;
             score = 0;
-            return "🎮 Welcome to the Cybersecurity Quiz! You'll be asked 10 random questions. Type A, B, C, or D to answer.\n\n" + GetCurrentQuestion();
+            return " Welcome to the Cybersecurity Quiz! You'll be asked 10 random questions. Type A, B, C, or D to answer.\n\n" + GetCurrentQuestion();
         }
 
         public string GetCurrentQuestion()
