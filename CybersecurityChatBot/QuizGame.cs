@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CybersecurityChatbot
+namespace CybersecurityChatBot
 {
     public class QuizGame
     {

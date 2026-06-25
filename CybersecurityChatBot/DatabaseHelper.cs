@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-namespace CybersecurityChatbot
+namespace CybersecurityChatBot
 {
     public class DatabaseHelper
     {
@@ -184,21 +184,21 @@ namespace CybersecurityChatbot
         }
 
         public bool TestConnection()
+{
+    try
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Connection Error: {ex.Message}");
-                return false;
-            }
+            conn.Open();
+            return true;
         }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Connection Error: {ex.Message}");
+        return false;
+    }
+}
     }
 
     // Task class

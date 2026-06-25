@@ -1,4 +1,4 @@
-﻿namespace CybersecurityChatbot
+﻿namespace CybersecurityChatBot
 {
     partial class Form1
     {

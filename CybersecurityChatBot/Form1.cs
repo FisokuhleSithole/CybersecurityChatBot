@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace CybersecurityChatbot
+namespace CybersecurityChatBot
 {
     public partial class Form1 : Form  // ← MUST have : Form
     {
