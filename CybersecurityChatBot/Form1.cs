@@ -205,7 +205,31 @@ namespace CybersecurityChatBot
         {
             string lowerInput = input.ToLower().Trim();
 
-            // Check for quit
+            // STEP 1: Check if Quiz is Active FIRST
+            if (quizGame.IsActive)
+            {
+                // "quit" during quiz → EXIT QUIZ ONLY
+                if (lowerInput == "quit" || lowerInput == "exit" || lowerInput == "goodbye")
+                {
+                    quizGame.ForceEnd();
+                    LogActivity("Quiz Cancelled", "User cancelled the quiz early.");
+                    return " Quiz cancelled. You're now back in normal chat mode. Type 'start quiz' to play again, or type 'quit' again to close the application.";
+                }
+
+                // Handle quiz answers
+                string result = quizGame.SubmitAnswer(input);
+                LogActivity("Quiz Attempt", $"User answered a quiz question.");
+
+                if (!quizGame.IsActive)
+                {
+                    LogActivity("Quiz Completed", $"User finished the quiz.");
+                }
+
+                return result;
+            }
+
+            
+            // STEP 2: Check for quit (ONLY when NOT in quiz mode)
             if (lowerInput == "quit" || lowerInput == "exit" || lowerInput == "goodbye")
             {
                 Application.Exit();
@@ -234,6 +258,36 @@ namespace CybersecurityChatBot
                     return "You're already playing the quiz! Submit your answer.";
                 }
             }
+
+            // PART 3: Handle quiz answer (if quiz is active)
+            if (quizGame.IsActive)
+            {
+                // Check if user wants to quit the quiz ONLY (not the application)
+                if (lowerInput == "quit" || lowerInput == "exit" || lowerInput == "goodbye")
+                {
+                    quizGame.ForceEnd();
+                    LogActivity("Quiz Cancelled", "User cancelled the quiz early.");
+                    return " Quiz cancelled. You're now back in normal chat mode. Type 'start quiz' to play again, or type 'quit' again to close the application.";
+                }
+
+                // Check if user wants to see progress
+                if (lowerInput == "progress" || lowerInput == "score")
+                {
+                    return quizGame.GetScore() + "\n\nContinue with your answer, or type 'quit' to exit the quiz.";
+                }
+
+                string result = quizGame.SubmitAnswer(input);
+                LogActivity("Quiz Attempt", $"User answered a quiz question.");
+
+                // If quiz just ended, log it
+                if (!quizGame.IsActive)
+                {
+                    LogActivity("Quiz Completed", $"User finished the quiz.");
+                }
+
+                return result;
+            }
+
 
             // PART 3: Handle quiz answer
             if (quizGame.IsActive)
@@ -340,8 +394,11 @@ namespace CybersecurityChatBot
         // PART 3: Handle Add Task
         private string HandleAddTask(string input)
         {
+            // Remove the command prefix from the input
             string taskContent = input;
-            foreach (var prefix in new[] { "add task", "new task", "create task", "add reminder", "remind me to" })
+            string[] prefixes = { "add task", "new task", "create task", "add reminder", "remind me to", "remind to", "set reminder", "remember to" };
+
+            foreach (var prefix in prefixes)
             {
                 if (input.ToLower().Contains(prefix))
                 {
@@ -351,14 +408,16 @@ namespace CybersecurityChatBot
                 }
             }
 
+            // If no task content, ask for it
             if (string.IsNullOrEmpty(taskContent) || taskContent.Length < 3)
             {
-                return "What task would you like to add? Please describe it, e.g., 'Enable two-factor authentication'";
+                return "What task would you like to add? Please describe it, e.g., 'Enable two-factor authentication' or 'Create a new strong password'";
             }
 
             string title = taskContent.Length > 50 ? taskContent.Substring(0, 47) + "..." : taskContent;
             string description = taskContent;
 
+            // Check for reminder
             DateTime? reminderDate = null;
             if (input.ToLower().Contains("remind") || input.ToLower().Contains("tomorrow") ||
                 input.ToLower().Contains("days") || input.ToLower().Contains("weeks"))
