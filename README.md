@@ -78,4 +78,47 @@ All code within this project was written, understood, and tested by me. The AI t
 **Conversation Flow**: "Tell me more" continues current topic
 **Keyword Recognition**: Recognizes password, phishing, privacy keywords
 
+   ### Part 3 - Advanced Features (v3.1) 
+| Feature | Description |
+|---------|-------------|
+|  **Task Assistant** | Add, view, complete, and delete cybersecurity tasks |
+|  **MySQL Database** | Persistent task and activity log storage |
+|  **Cybersecurity Quiz** | 12-question quiz with scoring and immediate feedback |
+|  **NLP Simulation** | Flexible command parsing for natural conversation |
+|  **Activity Log** | Tracks all user actions and bot responses |
+|  **Quiz Exit** | Exit the quiz anytime without closing the application |
+|  **Task Keywords** | Add tasks even when they contain cybersecurity keywords |
+
+---
+
+##  Cybersecurity Topics Covered
+
+| Topic | What Users Learn |
+|-------|------------------|
+| **Password Safety** | Creating strong, unique passwords |
+| **Phishing Scams** | Recognizing fake emails and messages |
+| **Safe Browsing** | Identifying secure websites (HTTPS) |
+| **Suspicious Links** | How to spot dangerous URLs |
+| **Social Engineering** | Manipulation tactics used by attackers |
+| **Two-Factor Authentication (2FA)** | Extra security layer for accounts |
+| **Malware Protection** | Avoiding malicious software |
+| **Data Breaches** | What to do if your data is stolen |
+
+---
+
+##  Getting Started
+
+### Prerequisites
+
+- **Windows** operating system (required for Windows Forms)
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download) or higher
+- [MySQL Server](https://dev.mysql.com/downloads/) (for Part 3 features)
+- [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (optional - for database management)
+- Visual Studio 2022 (recommended) or any C# IDE
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/FisokuhleSithole/CybersecurityChatBot.git
    
